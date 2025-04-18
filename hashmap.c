@@ -40,8 +40,10 @@ int is_equal(void* key1, void* key2){
 
 
 void insertMap(HashMap * map, char * key, void * value) {
+    float porcentaje = (float)map->size / (float)map->capacity;
+    if(porcentaje >= 0.7) enlarge(map);
+    
     int posicion  = hash(key, map->capacity);
-
     while(map->buckets[posicion] != NULL && map->buckets[posicion]->key != NULL) {
         if(is_equal(map->buckets[posicion]->key, key)) return;
         posicion = (posicion + 1) % map->capacity;
@@ -54,8 +56,6 @@ void insertMap(HashMap * map, char * key, void * value) {
     map->buckets[posicion] = nuevo;
     map->size++;
     map->current = posicion;
-
-    if((float) map->size / map->capacity > 0.7) enlarge(map);
 }
 
 void enlarge(HashMap * map) {
